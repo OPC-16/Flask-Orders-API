@@ -1,6 +1,6 @@
 -- Creating the 'order' table
 CREATE TABLE IF NOT EXISTS `order` (
-    OrderID INTEGER PRIMARY KEY,
+    OrderID INTEGER PRIMARY KEY AUTOINCREMENT,
     CustomerID TEXT NOT NULL,
     Items TEXT,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

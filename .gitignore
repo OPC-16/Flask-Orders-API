@@ -6,3 +6,4 @@ lib64
 pyvenv.cfg
 
 flask-orders-api/__pycache__/*
+var/*
