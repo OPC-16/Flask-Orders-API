@@ -34,7 +34,7 @@ ON
     return jsonify(orders)
 
 # this will create an order
-@bp.route('/create', methods=('POST'))
+@bp.route('/create', methods=["POST"])
 def create():
     DB = db.get_db()
     data = request.get_json()
@@ -44,7 +44,7 @@ def create():
         return jsonify({'error': 'Invalid input'}), 400
 
     # we will create a uuid for CustomerID field
-    uuid_customerID = uuid.uuid1()
+    uuid_customerID = str(uuid.uuid1())
     try:
         # insert the order into database
         DB.execute(
