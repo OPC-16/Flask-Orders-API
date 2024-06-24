@@ -31,7 +31,7 @@ ON
     o.OrderID = i.OrderID;
 """).fetchall()
 
-    return jsonify(orders)
+    return jsonify(dict(orders))
 
 # this will create an order
 @bp.route('/create', methods=["POST"])
@@ -64,4 +64,44 @@ def get_order_by_id(id):
 
     order = DB.execute("SELECT * FROM `order` WHERE OrderID = ?", (id,)).fetchone()
 
-    return jsonify(dict(order))
+    if order is None:
+        return jsonify({'error': 'Order not found'}), 404
+    else:
+        return jsonify(dict(order))
+
+# update the order by supplied order id
+@bp.route('/update/<int:id>', methods=['POST', 'GET'])
+def update_order_by_id(id):
+    DB = db.get_db()
+
+    data = request.get_json()
+    # validate the required fields
+    if not data or not all(k in data for k in ('Items', 'CreatedAt')):
+        return jsonify({'error': 'Invalid input'}), 400
+
+    # check if order exists
+    if get_order_by_id(id) is None:
+        return jsonify({'error': 'Order not found'}), 404
+
+    # update the order in database
+    DB.execute(
+            "UPDATE `order` SET Items = ?, CreatedAt = ?, ShippedAt = ?, CompletedAt = ? WHERE OrderID = ?", (data['Items'], data['CreatedAt'], data.get('ShippedAt'), data.get('CompletedAt'), id)
+            )
+    DB.commit()
+
+    return jsonify({'message': 'Order updated successfully'}), 201
+
+# update the order by supplied order id
+@bp.route('/delete/<int:id>', methods=['DELETE'])
+def delete_order_by_id(id):
+    DB = db.get_db()
+
+    # check if order exists
+    if get_order_by_id(id) is None:
+        return jsonify({'error': 'Order not found'}), 404
+
+    # delete the order from database
+    DB.execute('DELETE FROM `order` WHERE OrderID = ?', (id,))
+    DB.commit()
+
+    return jsonify({'message': 'Order deleted successfully'}), 201
