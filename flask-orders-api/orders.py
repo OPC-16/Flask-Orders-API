@@ -56,3 +56,12 @@ def create():
         return jsonify({'error': 'OrderID already exists'}), 400
 
     return jsonify({'message': 'Order created successfully'}), 201
+
+# this route fetches a single order by matching the order id supplied in the request
+@bp.route('/list/<int:id>')
+def get_order_by_id(id):
+    DB = db.get_db()
+
+    order = DB.execute("SELECT * FROM `order` WHERE OrderID = ?", (id,)).fetchone()
+
+    return jsonify(dict(order))
