@@ -46,3 +46,16 @@ curl -X GET http://127.0.0.1:5000/list/1
 ```bash
 curl -X DELETE http://127.0.0.1:5000/delete/1
 ```
+
+## Docker container
+
+### Build the Docker Image
+```bash
+docker buildx build -t flask-orders-api .
+```
+**Note: `docker-buildx` is new and recommended builder to use for building docker images.**
+
+### Run the Docker Container
+```bash
+docker run -p 5000:5000 flask-orders-api:latest
+```
